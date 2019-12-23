@@ -8,12 +8,21 @@ module.exports = function(app) {
   // GET route for getting all of the units
   app.get("/api/units", function(req, res) {
     var query = {};
-    if (req.query.unit_id) {
-      query.id = req.query.unit_id;
+    if (req.body.unit_id) {
+      query.id = req.body.unit_id;
     }
-    // Here we add an "include" property to our options in our findAll query
-    // We set the value to an array of the models we want to include in a left outer join
-    // In this case, just db.User
+    db.unit.findAll({
+      where: query,
+      include: [db.user]
+    }).then(function(dbunit) {
+      res.json(dbunit);
+    });
+  });
+  app.get("/api/bycity", function(req, res) {
+    var query = {
+      city : req.body.city,
+      state : req.body.state
+    }
     db.unit.findAll({
       where: query,
       include: [db.user]
@@ -23,13 +32,9 @@ module.exports = function(app) {
   });
   // GET route for getting all of the users
   app.get("/api/users", function(req, res) {
-    var query = {};
-    if (req.body.user_id) {
-      query.id = req.body.user_id;
-    }
-    // Here we add an "include" property to our options in our findAll query
-    // We set the value to an array of the models we want to include in a left outer join
-    // In this case, just db.User
+    var query = { 
+      id: req.body.id
+    };
     console.log(query)
     db.user.findAll({
       where: query,
@@ -38,5 +43,18 @@ module.exports = function(app) {
       res.json(dbuser);
     });
   });
-  //
+  // PUT route for updating units
+  app.put("/api/status", function(req, res) {
+    var query = { 
+      user_id: req.body.id
+    };
+    console.log(query)
+    db.unit.update({
+      status: req.body.status,
+      where: query,
+      include: [db.user]
+    }).then(function(result) {
+      res.send(result);
+    });
+  });                                                                                                           
 };

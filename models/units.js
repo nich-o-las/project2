@@ -33,7 +33,7 @@ module.exports = function(sequelize, DataTypes) {
     zip: {
       type: DataTypes.INTEGER,
       validate: {
-        len: [05]
+        // len: [05]
       }
     },
     owner_id: {
@@ -70,13 +70,6 @@ module.exports = function(sequelize, DataTypes) {
     last_occupied_id: {
       type: DataTypes.INTEGER,
       allowNull: true
-    },
-    owner_id: {
-      type: DataTypes.STRING,
-      validate: {
-        len: [01]
-      },
-      allowNull: false
     },
     image: {
       type: DataTypes.STRING,
