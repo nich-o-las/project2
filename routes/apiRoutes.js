@@ -4,12 +4,41 @@ var db = require("../models");
 // Routes
 // =============================================================
 module.exports = function(app) {
-
-  // GET route for getting all of the units
-  app.get("/api/units", function(req, res) {
+  app.post("/api/users", function(req,res){
+    var newUser = {
+      email : req.body.email,
+      password : req.body.password
+    }
+    // only create a new user if there is not already a user with this email address
+    function isEmailUnique (email) {
+      return db.user.count({ where: { email: email } })
+        .then(count => {
+          if (count != 0) {
+            return false;
+          }
+          return true;
+      });
+    }
+    
+    isEmailUnique(newUser.email).then(isUnique => {
+        if (isUnique) {
+          db.user.create(newUser).then(() => {
+            res.sendStatus(200);
+          });
+        }
+    });
+  });
+  // POST route for creating a new unit
+  app.post("/api/unit", function(req, res){
+    db.unit.create(req.body).then(() => {
+      res.sendStatus(200);
+    })
+  })
+  // POST route for getting all of the units
+  app.get("/api/units/:user_id", function(req, res) {
     var query = {};
-    if (req.body.unit_id) {
-      query.id = req.body.unit_id;
+    if (req.params.user_id) {
+      query.userId = req.params.user_id;
     }
     db.unit.findAll({
       where: query,
@@ -18,7 +47,7 @@ module.exports = function(app) {
       res.json(dbunit);
     });
   });
-  app.get("/api/bycity", function(req, res) {
+  app.post("/api/unit/city", function(req, res) {
     var query = {
       city : req.body.city,
       state : req.body.state
@@ -30,8 +59,8 @@ module.exports = function(app) {
       res.json(dbunit);
     });
   });
-  // GET route for getting all of the users
-  app.get("/api/users", function(req, res) {
+  // post route for postting all of the users
+  app.post("/api/users", function(req, res) {
     var query = { 
       id: req.body.id
     };
@@ -44,7 +73,7 @@ module.exports = function(app) {
     });
   });
   // PUT route for updating units
-  app.put("/api/status", function(req, res) {
+  app.put("/api/unit/status", function(req, res) {
     var query = { 
       user_id: req.body.id
     };
