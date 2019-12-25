@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row">
-        <h1 id="greeting" data-id="{{id}}">Hello, {{email}}</h1>
+        <h1 id="greeting" data-id="{{id}}">{{email}}</h1>
     </div>
     <!-- Button trigger modal -->
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#unitModal">
@@ -69,9 +69,14 @@
             </div>
         </div>
     </div>
-    <h2>Your Garages:</h2>
-    <ul id="units">
-        
+    <h2>Garages You Own:</h2>
+    <ul class="list-group" id="units">
+    </ul>
+    <h2>Garages You've Requested:</h2>
+    <ul class="list-group" id="requested">
+    </ul>
+    <h2>Garages You Are Renting:</h2>
+    <ul class="list-group" id="occupied">
     </ul>
 </div>
 <script src="/js/profile.js"></script>
